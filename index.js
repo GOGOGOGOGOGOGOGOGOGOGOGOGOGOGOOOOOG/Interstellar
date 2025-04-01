@@ -22,6 +22,18 @@ const PORT = process.env.PORT || 8080;
 const cache = new Map();
 const CACHE_TTL = 30 * 24 * 60 * 60 * 1000; // Cache for 30 Days
 
+function preventUnwantedTabClosing(message = 'This page is asking you to confirm that you want to leave — information you’ve entered may not be saved.') {
+    window.addEventListener('beforeunload', function(e) {
+        e.preventDefault();
+        e.returnValue = message;
+        return message;
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    preventUnwantedTabClosing('Custom message: This page is asking you to confirm that you want to leave — information you’ve entered may not be saved.');
+});
+
 if (config.challenge !== false) {
   console.log(
     chalk.green("🔒 Password protection is enabled! Listing logins below"),
